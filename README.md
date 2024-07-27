@@ -117,5 +117,3 @@ For questions or support, please contact:
 - **GitHub:** [AadityaSukhoi](https://github.com/AadityaSukhoi)
 
 ---
-
-Feel free to modify any sections or add additional details as needed!
