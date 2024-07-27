@@ -6,17 +6,6 @@ _**README for GEMBOT**_
 
 GEMBOT is an AI chatbot developed using Google AI Studio's Gemini API. It is designed to interact with users and provide assistance on various topics.
 
-**Table of Contents**
-
-*Introduction*
-*Features*
-*Installation*
-*Usage*
-*Configuration*
-*API Reference*
-*Examples*
-*Contact*
-
 **Introduction**
 
 GEMBOT is a versatile AI-powered chatbot created to assist users with a wide range of inquiries. It leverages the capabilities of the Gemini API provided by Google AI Studio.
