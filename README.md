@@ -37,13 +37,13 @@ GEMBOT is a versatile AI-powered chatbot created to assist users with a wide ran
 #### Steps
 
 1. Clone the repository:
-    ```sh
+    ```
     git clone https://github.com/yourusername/AI-Chatbot.git
     cd AI-Chatbot
     ```
 
 2. Install the required packages:
-    ```sh
+    ```
     pip install -r requirements.txt
     ```
 
