@@ -1,5 +1,9 @@
 _**README for GEMBOT**_
+
+
 **GEMBOT**
+
+
 GEMBOT is an AI chatbot developed using Google AI Studio's Gemini API. It is designed to interact with users and provide assistance on various topics.
 
 **Table of Contents**
@@ -30,6 +34,7 @@ Google AI Studio API key
 **Steps**
 Clone the repository:
 git clone https://github.com/yourusername/AI-Chatbot.git
+
 cd AI-Chatbot
 
 Install the required packages:
@@ -65,5 +70,7 @@ GEMBOT: The weather in New York is sunny with a high of 75°F.
 For questions or support, please contact:
 
 Aaditya Ranjan Moitra
+
 Email: aadityaranjanmoitra@gmail.com
+
 GitHub: AadityaSukhoi
