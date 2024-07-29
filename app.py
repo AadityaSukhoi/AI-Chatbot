@@ -35,4 +35,4 @@ question = st.text_input("Ask your Question")
 if st.button("Submit Your Question"):
     response = get_gemini_response(question)
     st.write("**YOU**", question)
-    st.write("**GEMINI**", response)
+    st.write("**GEMBOT**", response)
