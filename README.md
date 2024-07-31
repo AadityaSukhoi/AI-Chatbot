@@ -108,12 +108,7 @@ We welcome contributions to improve GEMBOT. Please follow these steps:
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
-### Contact
+### LinkedIn Post
+https://www.linkedin.com/posts/aaditya-ranjan-moitra-211493270_ai-chatbot-googleai-activity-7223038561552326656-XVz2?utm_source=share&utm_medium=member_desktop
 
-For questions or support, please contact:
-
-- **Aaditya Ranjan Moitra**
-- **Email:** aadityaranjanmoitra@gmail.com
-- **GitHub:** [AadityaSukhoi](https://github.com/AadityaSukhoi)
-- 
 ---
