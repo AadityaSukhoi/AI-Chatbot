@@ -32,8 +32,6 @@ st.header("GemBot - Your Personal AI Assistant")
 question = st.text_input("Ask your Question")
 
 # submit
-st.snow()
-
 if st.button("Submit Your Question"):
     response = get_gemini_response(question)
     st.write("**YOU:**", question)
