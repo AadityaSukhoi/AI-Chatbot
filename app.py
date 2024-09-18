@@ -32,7 +32,7 @@ st.header("GemBot - Your Personal AI Assistant")
 question = st.text_input("Ask your Question")
 
 # submit
-st.ballons()
+st.balloons()
 
 if st.button("Submit Your Question"):
     response = get_gemini_response(question)
