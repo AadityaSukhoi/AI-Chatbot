@@ -36,3 +36,4 @@ if st.button("Submit Your Question"):
     response = get_gemini_response(question)
     st.write("**YOU:**", question)
     st.write("**GEMBOT:**", response)
+st.ballons()
