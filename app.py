@@ -33,6 +33,7 @@ if "current_chat" not in st.session_state:
 # Initialize session state to store different chat sessions in the sidebar
 if "chat_sessions" not in st.session_state:
     st.session_state.chat_sessions = []
+    st.session_state.session_names = []  # Store names of the sessions
 
 # Input question
 question = st.text_input("Ask your Question")
@@ -56,15 +57,28 @@ with st.sidebar:
     
     # Button to start a new chat session
     if st.button("New Session"):
-        # Save the current chat to the sessions history if not empty
+        # Save the current chat and default name if not empty
         if st.session_state.current_chat:
             st.session_state.chat_sessions.append(st.session_state.current_chat)
+            st.session_state.session_names.append(f"Session {len(st.session_state.chat_sessions)}")
+        
         # Clear the current chat for a new session
         st.session_state.current_chat = []
     
-    # Display saved chat sessions in the sidebar
+    # Display saved chat sessions with options to rename or delete
     for i, session in enumerate(st.session_state.chat_sessions):
-        with st.expander(f"Session {i+1}"):
+        with st.expander(st.session_state.session_names[i]):
+            # Rename session
+            new_name = st.text_input(f"Rename Session {i+1}", value=st.session_state.session_names[i])
+            st.session_state.session_names[i] = new_name  # Update name
+            
+            # Display chat history
             for q, r in session:
                 st.write("**YOU:**", q)
                 st.write("**GEMBOT:**", r)
+
+            # Delete button
+            if st.button(f"Delete Session {i+1}"):
+                del st.session_state.chat_sessions[i]
+                del st.session_state.session_names[i]
+                st.experimental_rerun()  # Refresh the app to show changes
