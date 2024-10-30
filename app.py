@@ -79,13 +79,20 @@ if st.session_state.current_chat is not None:
         st.write("**YOU:**", q)
         st.write("**GEMBOT:**", r)
 
-    # Input for new question
-    question = st.text_input("Ask your Question")
+    # Button to start a new session
+    if st.button("Start New Session"):
+        st.session_state.current_chat = []  # Clear current chat for new session
+        st.session_state.current_session_index = None  # Reset index
+        st.success("New session started! You can now input your questions.")
 
-    # Submit button to generate response
-    if st.button("Submit Your Question"):
-        response = get_gemini_response(question)
-        st.session_state.current_chat.append((question, response))  # Append question and response to current chat
-        st.write("**YOU:**", question)
-        st.write("**GEMBOT:**", response)
-        st.session_state.chat_sessions[st.session_state.current_session_index] = st.session_state.current_chat  # Update the chat sessions list
+    # Input for new question (only available when starting a new session)
+    if st.session_state.current_session_index is not None:
+        question = st.text_input("Ask your Question")
+
+        # Submit button to generate response
+        if st.button("Submit Your Question"):
+            response = get_gemini_response(question)
+            st.session_state.current_chat.append((question, response))  # Append question and response to current chat
+            st.write("**YOU:**", question)
+            st.write("**GEMBOT:**", response)
+            st.session_state.chat_sessions[st.session_state.current_session_index] = st.session_state.current_chat  # Update the chat sessions list
