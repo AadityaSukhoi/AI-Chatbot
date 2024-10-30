@@ -58,7 +58,6 @@ if "input_box" not in st.session_state:
 # Function to start a new session
 def start_new_session():
     st.session_state.current_chat = []
-    # Use a new name for the session based on the count
     new_session_name = f"Session {len(st.session_state.session_names) + 1}"
     st.session_state.session_names.append(new_session_name)
     st.session_state.chat_sessions.append(st.session_state.current_chat)
@@ -98,6 +97,7 @@ with st.sidebar:
     if st.button("New Session"):
         start_new_session()  # Start a new session
         st.session_state.input_box = ""  # Clear the text input box
+        save_sessions()  # Save the new session
         st.experimental_rerun()  # Refresh the page to reflect a new session
 
     # Display saved chat sessions with options to rename or delete
