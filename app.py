@@ -41,14 +41,13 @@ with st.sidebar:
     new_session_name = st.text_input("New Session Name", "")
 
     # Create new session button
-    # if st.button("Create New Session"):
-    #     if new_session_name:  # Ensure the session name is not empty
-    #         st.session_state.chat_sessions.append([])
-    #         st.session_state.session_names.append(new_session_name)
-    #         st.session_state.current_chat = []  # Clear current chat for new session
-    #         st.session_state.current_session_index = len(st.session_state.session_names) - 1  # Set as current
-    #         st.success(f"Session '{new_session_name}' created!")
-    st.text("Create a new session first.")
+    if st.button("Create New Session"):
+        if new_session_name:  # Ensure the session name is not empty
+            st.session_state.chat_sessions.append([])
+            st.session_state.session_names.append(new_session_name)
+            st.session_state.current_chat = []  # Clear current chat for new session
+            st.session_state.current_session_index = len(st.session_state.session_names) - 1  # Set as current
+            st.success(f"Session '{new_session_name}' created!")
 
     # Select session to view
     selected_session = st.selectbox("Select Session", options=st.session_state.session_names)
@@ -80,11 +79,8 @@ if st.session_state.current_chat is not None:
         st.write("**YOU:**", q)
         st.write("**GEMBOT:**", r)
 
-    # Button to start a new session
-    if st.button("Start New Session"):
-        st.session_state.current_chat = []  # Clear current chat for new session
-        st.session_state.current_session_index = None  # Reset index
-        st.success("New session started! You can now input your questions.")
+   
+    st.warning("Create a new session first.")
 
     # Input for new question (only available when starting a new session)
     if st.session_state.current_session_index is not None:
