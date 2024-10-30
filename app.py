@@ -80,21 +80,22 @@ if st.session_state.current_chat is not None:
         st.write("**YOU:**", q)
         st.write("**GEMBOT:**", r)
 
-    # Input for new question
-    question = st.text_input("Ask your Question")
+# Input for new question
+question = st.text_input("Ask your Question")
 
-    # Check if there's no current session and the question is not empty
-    if not st.session_state.current_chat and question:
-        # Create a new session with a default name
+# Check if there's no ongoing session and user has typed something
+if question:
+    # Create a new session automatically if there is no current session
+    if st.session_state.current_chat == []:
         default_session_name = f"Session {len(st.session_state.session_names) + 1} - {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
         st.session_state.chat_sessions.append([])
         st.session_state.session_names.append(default_session_name)
         st.session_state.current_chat = []  # Clear current chat for new session
         st.session_state.current_session_index = len(st.session_state.session_names) - 1  # Set as current
-        st.success(f"Session '{default_session_name}' created automatically!")
+        st.success(f"New session '{default_session_name}' created automatically!")
 
-    # Submit button to generate response only if there's a question
-    if question and st.button("Submit Your Question"):
+    # Submit button to generate response
+    if st.button("Submit Your Question"):
         response = get_gemini_response(question)
         st.session_state.current_chat.append((question, response))  # Append question and response to current chat
         st.write("**YOU:**", question)
