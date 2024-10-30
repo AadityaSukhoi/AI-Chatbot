@@ -49,12 +49,12 @@ if "chat_sessions" not in st.session_state:
 # Initialize current chat if not already in session state
 if "current_chat" not in st.session_state:
     st.session_state.current_chat = []
-    
+
 # Check if there's an ongoing session; if not, start a new one automatically when a prompt is given
 def start_new_session():
     st.session_state.current_chat = []
-    st.session_state.session_names.append(f"Session {len(st.session_state.session_names) + 1}")
     st.session_state.chat_sessions.append(st.session_state.current_chat)
+    st.session_state.session_names.append(f"Session {len(st.session_state.session_names) + 1}")
 
 # Header
 st.header("GemBot - Your Personal AI Assistant")
@@ -74,13 +74,14 @@ if question and st.button("Submit Your Question"):
     # Save current question and response in the ongoing session
     st.session_state.current_chat.append((question, response))
 
-    # Display conversation in the main screen
+    # Save sessions to maintain state
+    save_sessions()
+
+# Display conversation in the main screen (current session)
+if st.session_state.current_chat:
     for q, r in st.session_state.current_chat:
         st.write("**YOU:**", q)
         st.write("**GEMBOT:**", r)
-
-    # Save sessions to maintain state
-    save_sessions()
 
 # Sidebar - Session management
 with st.sidebar:
