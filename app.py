@@ -2,6 +2,7 @@ import streamlit as st
 import os
 import pickle
 from dotenv import load_dotenv
+
 load_dotenv()
 
 import google.generativeai as genai
@@ -52,6 +53,7 @@ if "current_chat" not in st.session_state:
 
 # Check if there's an ongoing session; if not, start a new one automatically when a prompt is given
 def start_new_session():
+    # Start a new chat session and initialize current chat
     st.session_state.current_chat = []
     st.session_state.chat_sessions.append(st.session_state.current_chat)
     st.session_state.session_names.append(f"Session {len(st.session_state.session_names) + 1}")
@@ -89,19 +91,19 @@ with st.sidebar:
 
     # New Session Button
     if st.button("New Session"):
-        start_new_session()
+        start_new_session()  # Start a new session
         st.session_state.input_box = ""  # Clear the text input box
         st.experimental_rerun()  # Refresh the page to reflect a new session
 
     # Display saved chat sessions with options to rename or delete
-    for i, session in enumerate(st.session_state.chat_sessions):
+    for i in range(len(st.session_state.chat_sessions)):
         # Use session name with a text input for renaming
         new_name = st.text_input(f"Session Name {i+1}", value=st.session_state.session_names[i], key=f"name_{i}")
         st.session_state.session_names[i] = new_name  # Update name in the session names list
 
         # Display session history under the user-defined name
         with st.expander(new_name):
-            for q, r in session:
+            for q, r in st.session_state.chat_sessions[i]:
                 st.write("**YOU:**", q)
                 st.write("**GEMBOT:**", r)
 
