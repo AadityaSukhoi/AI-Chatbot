@@ -1,7 +1,6 @@
 import streamlit as st   # UI Design
 import os
 from dotenv import load_dotenv    # package to get the environment variables loaded into the application
-from datetime import datetime  # For timestamp in session naming
 load_dotenv()  # loading all environment variables
 
 import google.generativeai as genai
@@ -80,24 +79,20 @@ if st.session_state.current_chat is not None:
         st.write("**YOU:**", q)
         st.write("**GEMBOT:**", r)
 
-# Input for new question
-question = st.text_input("Ask your Question")
-
-# Check if there's no ongoing session and user has typed something
-if question:
-    # Create a new session automatically if there is no current session
-    if st.session_state.current_chat == []:
-        default_session_name = f"Session {len(st.session_state.session_names) + 1} - {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
-        st.session_state.chat_sessions.append([])
-        st.session_state.session_names.append(default_session_name)
+    # Button to start a new session
+    if st.button("Start New Session"):
         st.session_state.current_chat = []  # Clear current chat for new session
-        st.session_state.current_session_index = len(st.session_state.session_names) - 1  # Set as current
-        st.success(f"New session '{default_session_name}' created automatically!")
+        st.session_state.current_session_index = None  # Reset index
+        st.success("New session started! You can now input your questions.")
 
-    # Submit button to generate response
-    if st.button("Submit Your Question"):
-        response = get_gemini_response(question)
-        st.session_state.current_chat.append((question, response))  # Append question and response to current chat
-        st.write("**YOU:**", question)
-        st.write("**GEMBOT:**", response)
-        st.session_state.chat_sessions[st.session_state.current_session_index] = st.session_state.current_chat  # Update the chat sessions list
+    # Input for new question (only available when starting a new session)
+    if st.session_state.current_session_index is not None:
+        question = st.text_input("Ask your Question")
+
+        # Submit button to generate response
+        if st.button("Submit Your Question"):
+            response = get_gemini_response(question)
+            st.session_state.current_chat.append((question, response))  # Append question and response to current chat
+            st.write("**YOU:**", question)
+            st.write("**GEMBOT:**", response)
+            st.session_state.chat_sessions[st.session_state.current_session_index] = st.session_state.current_chat  # Update the chat sessions list
