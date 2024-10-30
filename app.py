@@ -77,7 +77,7 @@ with st.sidebar:
 
 # Main chat interface
 if st.session_state.current_chat is not None:
-    # Display chat history for the current session
+    # Display chat history for the current session only
     for q, r in st.session_state.current_chat:
         st.write("**YOU:**", q)
         st.write("**GEMBOT:**", r)
@@ -86,14 +86,18 @@ if st.session_state.current_chat is not None:
     if not st.session_state.session_created:
         st.warning("Create a new session first.")
 
-    # Input for new question (only available when starting a new session)
-    if st.session_state.current_session_index is not None:
-        question = st.text_input("Ask your Question")
+# Fixed input for new question (only available when a session is selected)
+if st.session_state.current_session_index is not None:
+    question = st.text_input("Ask your Question", key="input_box")  # Keep the input box fixed
 
-        # Submit button to generate response
-        if st.button("Submit Your Question"):
+    # Submit button to generate response
+    if st.button("Submit Your Question"):
+        if question:  # Check if the question is not empty
             response = get_gemini_response(question)
             st.session_state.current_chat.append((question, response))  # Append question and response to current chat
             st.write("**YOU:**", question)
             st.write("**GEMBOT:**", response)
             st.session_state.chat_sessions[st.session_state.current_session_index] = st.session_state.current_chat  # Update the chat sessions list
+
+            # Clear the input box after submission
+            st.session_state.input_box = ""
