@@ -1,9 +1,7 @@
-import streamlit as st
+import streamlit as st   # UI Design
 import os
-import pickle
-from dotenv import load_dotenv
-
-load_dotenv()
+from dotenv import load_dotenv    # package to get the environment variables loaded into the application
+load_dotenv()  # loading all environment variables
 
 import google.generativeai as genai
 
@@ -18,104 +16,76 @@ def get_gemini_response(question):
     response = model.generate_content(question)
     return response.text
 
-# Function to save sessions to a file for persistence
-def save_sessions():
-    with open("chat_sessions.pkl", "wb") as file:
-        pickle.dump({
-            "chat_sessions": st.session_state.chat_sessions,
-            "session_names": st.session_state.session_names
-        }, file)
-
-# Function to load sessions from the file if it exists
-def load_sessions():
-    if os.path.exists("chat_sessions.pkl"):
-        with open("chat_sessions.pkl", "rb") as file:
-            data = pickle.load(file)
-            st.session_state.chat_sessions = data.get("chat_sessions", [])
-            st.session_state.session_names = data.get("session_names", [])
-
-# Initialize Streamlit app configuration
+# Setting up the Streamlit app
 st.set_page_config(
     page_title="GemBot",
     layout="wide",
     initial_sidebar_state="expanded"
 )
 
-# Load sessions from file on page load
+# Initialize session state for chats and session names
 if "chat_sessions" not in st.session_state:
-    st.session_state.chat_sessions = []
-    st.session_state.session_names = []
-    load_sessions()
+    st.session_state.chat_sessions = []  # Store chat history for sessions
+    st.session_state.session_names = []   # Store names for sessions
+    st.session_state.current_chat = []     # Current chat history
+    st.session_state.current_session_index = None  # Index of the currently selected session
 
-# Initialize current chat if not already in session state
-if "current_chat" not in st.session_state:
-    st.session_state.current_chat = []
-
-# Initialize input box state
-if "input_box" not in st.session_state:
-    st.session_state.input_box = ""
-
-# Function to start a new session
-def start_new_session():
-    st.session_state.current_chat = []
-    new_session_name = f"Session {len(st.session_state.session_names) + 1}"
-    st.session_state.session_names.append(new_session_name)
-    st.session_state.chat_sessions.append(st.session_state.current_chat)
-
-# Header
+# Setting up header
 st.header("GemBot - Your Personal AI Assistant")
 
-# Input question
-question = st.text_input("Ask your Question", key="input_box", value=st.session_state.input_box)
+# Sidebar for session management
+with st.sidebar:
+    st.header("Manage Sessions")
 
-# Submit and generate response
-if question and st.button("Submit Your Question"):
-    # Start a new session automatically if there’s no ongoing session
-    if not st.session_state.current_chat:
-        start_new_session()
+    # Input for session name
+    new_session_name = st.text_input("New Session Name", "")
 
-    # Get response from the model
-    response = get_gemini_response(question)
+    # Create new session button
+    if st.button("Create New Session"):
+        if new_session_name:  # Ensure the session name is not empty
+            st.session_state.chat_sessions.append([])
+            st.session_state.session_names.append(new_session_name)
+            st.session_state.current_chat = []  # Clear current chat for new session
+            st.session_state.current_session_index = len(st.session_state.session_names) - 1  # Set as current
+            st.success(f"Session '{new_session_name}' created!")
 
-    # Save current question and response in the ongoing session
-    st.session_state.current_chat.append((question, response))
+    # Select session to view
+    selected_session = st.selectbox("Select Session", options=st.session_state.session_names)
 
-    # Save sessions to maintain state
-    save_sessions()
+    # Update the current chat based on selected session
+    if selected_session:
+        st.session_state.current_session_index = st.session_state.session_names.index(selected_session)
+        st.session_state.current_chat = st.session_state.chat_sessions[st.session_state.current_session_index]
 
-# Display conversation in the main screen (current session)
-if st.session_state.current_chat:
+    # Delete session button
+    if st.button("Delete Session"):
+        if st.session_state.current_session_index is not None:
+            st.session_state.chat_sessions.pop(st.session_state.current_session_index)
+            st.session_state.session_names.pop(st.session_state.current_session_index)
+            st.session_state.current_chat = []
+            st.session_state.current_session_index = None
+            st.success("Session deleted!")
+
+    # Rename session button
+    if st.button("Rename Session") and st.session_state.current_session_index is not None:
+        if new_session_name:  # Ensure the new name is not empty
+            st.session_state.session_names[st.session_state.current_session_index] = new_session_name
+            st.success("Session renamed!")
+
+# Main chat interface
+if st.session_state.current_chat is not None:
+    # Display chat history for the current session
     for q, r in st.session_state.current_chat:
         st.write("**YOU:**", q)
         st.write("**GEMBOT:**", r)
 
-# Sidebar - Session management
-with st.sidebar:
-    st.header("Chat Sessions")
+    # Input for new question
+    question = st.text_input("Ask your Question")
 
-    # New Session Button
-    if st.button("New Session"):
-        start_new_session()  # Start a new session
-        st.session_state.input_box = ""  # Clear the text input box
-        save_sessions()  # Save the new session
-        st.experimental_rerun()  # Refresh the page to reflect a new session
-
-    # Display saved chat sessions with options to rename or delete
-    for i in range(len(st.session_state.chat_sessions)):
-        # Use session name with a text input for renaming
-        new_name = st.text_input(f"Session Name {i+1}", value=st.session_state.session_names[i], key=f"name_{i}")
-        st.session_state.session_names[i] = new_name  # Update name in the session names list
-
-        # Display session history under the user-defined name
-        with st.expander(new_name):
-            for q, r in st.session_state.chat_sessions[i]:
-                st.write("**YOU:**", q)
-                st.write("**GEMBOT:**", r)
-
-            # Delete button
-            if st.button(f"Delete {new_name}", key=f"delete_{i}"):
-                # Remove the session and name at index i
-                st.session_state.chat_sessions.pop(i)
-                st.session_state.session_names.pop(i)
-                save_sessions()  # Save after deletion
-                st.experimental_rerun()  # Refresh the app to show changes
+    # Submit button to generate response
+    if st.button("Submit Your Question"):
+        response = get_gemini_response(question)
+        st.session_state.current_chat.append((question, response))  # Append question and response to current chat
+        st.write("**YOU:**", question)
+        st.write("**GEMBOT:**", response)
+        st.session_state.chat_sessions[st.session_state.current_session_index] = st.session_state.current_chat  # Update the chat sessions list
