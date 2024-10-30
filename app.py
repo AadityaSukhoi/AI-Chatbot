@@ -41,13 +41,14 @@ with st.sidebar:
     new_session_name = st.text_input("New Session Name", "")
 
     # Create new session button
-    if st.button("Create New Session"):
-        if new_session_name:  # Ensure the session name is not empty
-            st.session_state.chat_sessions.append([])
-            st.session_state.session_names.append(new_session_name)
-            st.session_state.current_chat = []  # Clear current chat for new session
-            st.session_state.current_session_index = len(st.session_state.session_names) - 1  # Set as current
-            st.success(f"Session '{new_session_name}' created!")
+    # if st.button("Create New Session"):
+    #     if new_session_name:  # Ensure the session name is not empty
+    #         st.session_state.chat_sessions.append([])
+    #         st.session_state.session_names.append(new_session_name)
+    #         st.session_state.current_chat = []  # Clear current chat for new session
+    #         st.session_state.current_session_index = len(st.session_state.session_names) - 1  # Set as current
+    #         st.success(f"Session '{new_session_name}' created!")
+    st.text("Create a new session first.")
 
     # Select session to view
     selected_session = st.selectbox("Select Session", options=st.session_state.session_names)
