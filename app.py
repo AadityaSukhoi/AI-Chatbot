@@ -55,11 +55,13 @@ if "current_chat" not in st.session_state:
 if "input_box" not in st.session_state:
     st.session_state.input_box = ""
 
-# Check if there's an ongoing session; if not, start a new one automatically when a prompt is given
+# Function to start a new session
 def start_new_session():
     st.session_state.current_chat = []
+    # Use a new name for the session based on the count
+    new_session_name = f"Session {len(st.session_state.session_names) + 1}"
+    st.session_state.session_names.append(new_session_name)
     st.session_state.chat_sessions.append(st.session_state.current_chat)
-    st.session_state.session_names.append(f"Session {len(st.session_state.session_names) + 1}")
 
 # Header
 st.header("GemBot - Your Personal AI Assistant")
