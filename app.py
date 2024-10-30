@@ -51,9 +51,12 @@ if "chat_sessions" not in st.session_state:
 if "current_chat" not in st.session_state:
     st.session_state.current_chat = []
 
+# Initialize input box state
+if "input_box" not in st.session_state:
+    st.session_state.input_box = ""
+
 # Check if there's an ongoing session; if not, start a new one automatically when a prompt is given
 def start_new_session():
-    # Start a new chat session and initialize current chat
     st.session_state.current_chat = []
     st.session_state.chat_sessions.append(st.session_state.current_chat)
     st.session_state.session_names.append(f"Session {len(st.session_state.session_names) + 1}")
@@ -62,7 +65,7 @@ def start_new_session():
 st.header("GemBot - Your Personal AI Assistant")
 
 # Input question
-question = st.text_input("Ask your Question", key="input_box")
+question = st.text_input("Ask your Question", key="input_box", value=st.session_state.input_box)
 
 # Submit and generate response
 if question and st.button("Submit Your Question"):
@@ -109,7 +112,8 @@ with st.sidebar:
 
             # Delete button
             if st.button(f"Delete {new_name}", key=f"delete_{i}"):
-                del st.session_state.chat_sessions[i]
-                del st.session_state.session_names[i]
+                # Remove the session and name at index i
+                st.session_state.chat_sessions.pop(i)
+                st.session_state.session_names.pop(i)
                 save_sessions()  # Save after deletion
                 st.experimental_rerun()  # Refresh the app to show changes
