@@ -105,3 +105,5 @@ if st.session_state.current_session_index is not None:
             
             # Clear the input box after submission
             st.session_state.input_box = ""  # Reset the input box
+        else:
+            st.warning("Please enter a question before submitting.")
