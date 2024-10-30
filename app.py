@@ -1,6 +1,6 @@
-import streamlit as st   # UI Design
+import streamlit as st  # UI Design
 import os
-from dotenv import load_dotenv    # package to get the environment variables loaded into the application
+from dotenv import load_dotenv  # package to get the environment variables loaded into the application
 load_dotenv()  # loading all environment variables
 
 import google.generativeai as genai
@@ -31,6 +31,10 @@ if "chat_sessions" not in st.session_state:
     st.session_state.current_session_index = None  # Index of the currently selected session
     st.session_state.session_created = False  # Flag to track session creation
 
+# Initialize the input_box if it doesn't exist
+if "input_box" not in st.session_state:
+    st.session_state.input_box = ""  # Initialize input_box
+
 # Setting up header
 st.header("GemBot - Your Personal AI Assistant")
 
@@ -44,11 +48,11 @@ with st.sidebar:
     # Create new session button
     if st.button("Create New Session"):
         if new_session_name:  # Ensure the session name is not empty
-            st.session_state.chat_sessions.append([])
+            st.session_state.chat_sessions.append([])  # Start with an empty chat
             st.session_state.session_names.append(new_session_name)
             st.session_state.current_chat = []  # Clear current chat for new session
             st.session_state.current_session_index = len(st.session_state.session_names) - 1  # Set as current
-            st.session_state.session_created = True  # Set the flag to True
+            st.session_state.session_created = True  # Set session created flag
             st.success(f"Session '{new_session_name}' created!")
 
     # Select session to view
@@ -66,7 +70,7 @@ with st.sidebar:
             st.session_state.session_names.pop(st.session_state.current_session_index)
             st.session_state.current_chat = []
             st.session_state.current_session_index = None
-            st.session_state.session_created = False  # Reset the flag
+            st.session_state.session_created = False  # Reset session created flag
             st.success("Session deleted!")
 
     # Rename session button
@@ -88,7 +92,7 @@ if st.session_state.current_chat is not None:
 
 # Fixed input for new question (only available when a session is selected)
 if st.session_state.current_session_index is not None:
-    question = st.text_input("Ask your Question", key="input_box")  # Keep the input box fixed
+    question = st.text_input("Ask your Question", key="input_box", value=st.session_state.input_box)  # Keep the input box fixed
 
     # Submit button to generate response
     if st.button("Submit Your Question"):
@@ -98,6 +102,6 @@ if st.session_state.current_session_index is not None:
             st.write("**YOU:**", question)
             st.write("**GEMBOT:**", response)
             st.session_state.chat_sessions[st.session_state.current_session_index] = st.session_state.current_chat  # Update the chat sessions list
-
+            
             # Clear the input box after submission
-            st.session_state.input_box = ""
+            st.session_state.input_box = ""  # Reset the input box
