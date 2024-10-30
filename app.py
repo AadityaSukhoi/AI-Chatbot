@@ -29,6 +29,7 @@ if "chat_sessions" not in st.session_state:
     st.session_state.session_names = []   # Store names for sessions
     st.session_state.current_chat = []     # Current chat history
     st.session_state.current_session_index = None  # Index of the currently selected session
+    st.session_state.session_created = False  # Flag to track session creation
 
 # Setting up header
 st.header("GemBot - Your Personal AI Assistant")
@@ -47,6 +48,7 @@ with st.sidebar:
             st.session_state.session_names.append(new_session_name)
             st.session_state.current_chat = []  # Clear current chat for new session
             st.session_state.current_session_index = len(st.session_state.session_names) - 1  # Set as current
+            st.session_state.session_created = True  # Set the flag to True
             st.success(f"Session '{new_session_name}' created!")
 
     # Select session to view
@@ -64,6 +66,7 @@ with st.sidebar:
             st.session_state.session_names.pop(st.session_state.current_session_index)
             st.session_state.current_chat = []
             st.session_state.current_session_index = None
+            st.session_state.session_created = False  # Reset the flag
             st.success("Session deleted!")
 
     # Rename session button
@@ -79,8 +82,9 @@ if st.session_state.current_chat is not None:
         st.write("**YOU:**", q)
         st.write("**GEMBOT:**", r)
 
-   
-    st.warning("Create a new session first.")
+    # Show warning message only if no session has been created
+    if not st.session_state.session_created:
+        st.warning("Create a new session first.")
 
     # Input for new question (only available when starting a new session)
     if st.session_state.current_session_index is not None:
