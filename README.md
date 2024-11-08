@@ -38,7 +38,7 @@ GEMBOT is a versatile AI-powered chatbot created to assist users with a wide ran
 
 1. Clone the repository:
     ```
-    git clone https://github.com/yourusername/AI-Chatbot.git
+    git clone https://github.com/AadityaSukhoi/AI-Chatbot.git
     cd AI-Chatbot
     ```
 
