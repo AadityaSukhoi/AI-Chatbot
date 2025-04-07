@@ -10,7 +10,7 @@ genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
 
 
 # Initializing the model
-model = genai.GenerativeModel('gemini-pro')
+model = genai.GenerativeModel('gemini-1.5-pro')
 
 # define a function to generate the response from llm
 def get_gemini_response(question):
